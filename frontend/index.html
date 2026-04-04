@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DropShop — Modern Store</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+<!-- ── Navbar ──────────────────────────────────────────────────────────── -->
+<nav id="navbar">
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo">Drop<span>Shop</span></a>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="pages/products.html">Products</a></li>
+      <li><a href="pages/cart.html">Cart</a></li>
+    </ul>
+    <div class="nav-right">
+      <button class="nav-cart-btn" onclick="goTo('pages/cart.html')">
+        🛒 <span class="cart-badge" id="cart-badge" style="display:none">0</span>
+      </button>
+      <button class="nav-user-btn" id="nav-user-btn">Login</button>
+      <button class="hamburger">☰</button>
+    </div>
+  </div>
+</nav>
+
+<!-- ── Hero ────────────────────────────────────────────────────────────── -->
+<section class="hero">
+  <div class="hero-inner">
+    <div class="hero-content">
+      <span class="hero-eyebrow">✦ New Collection 2025</span>
+      <h1>Shop <em>Smarter</em>,<br>Live Better</h1>
+      <p>Curated products delivered fast. No markups, no middlemen — just great deals on things you'll love.</p>
+      <div class="hero-cta">
+        <a href="pages/products.html" class="btn btn-primary">Shop Now →</a>
+        <button class="btn btn-outline" id="seed-btn" style="border-color:rgba(255,255,255,.3);color:#fff;" onclick="seedDemo()">Load Sample Data</button>
+      </div>
+      <div class="hero-stats">
+        <div class="hero-stat"><div class="num">10K+</div><div class="label">Products</div></div>
+        <div class="hero-stat"><div class="num">50K+</div><div class="label">Customers</div></div>
+        <div class="hero-stat"><div class="num">4.8★</div><div class="label">Rating</div></div>
+      </div>
+    </div>
+    <div class="hero-img-wrap">
+      <img src="https://images.unsplash.com/photo-1483985988355-763728e1935b?w=600&h=500&fit=crop" alt="Shopping" />
+    </div>
+  </div>
+</section>
+
+<!-- ── Featured Products ────────────────────────────────────────────────── -->
+<section class="section">
+  <div class="container">
+    <div class="section-header">
+      <div>
+        <div class="tag">Featured</div>
+        <h2 class="section-title">Best Sellers</h2>
+      </div>
+      <a href="pages/products.html" class="btn btn-outline btn-sm">View All →</a>
+    </div>
+    <div class="grid-4" id="featured-grid">
+      <div class="spinner-wrap"><div class="spinner"></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ── Categories ───────────────────────────────────────────────────────── -->
+<section class="section" style="background:var(--primary);padding:3rem 0;">
+  <div class="container text-center">
+    <h2 style="color:#fff;margin-bottom:.5rem">Shop by Category</h2>
+    <p style="color:rgba(255,255,255,.6);margin-bottom:2rem">Everything you need, all in one place</p>
+    <div style="display:flex;flex-wrap:wrap;justify-content:center;gap:1rem;" id="cat-list"></div>
+  </div>
+</section>
+
+<!-- ── Why Us ────────────────────────────────────────────────────────────── -->
+<section class="section">
+  <div class="container">
+    <div class="grid-4">
+      <div class="card" style="padding:1.5rem;text-align:center;">
+        <div style="font-size:2rem;margin-bottom:.7rem">🚚</div>
+        <h3>Free Shipping</h3>
+        <p class="text-muted mt-1">On orders over $50. Fast delivery to your door.</p>
+      </div>
+      <div class="card" style="padding:1.5rem;text-align:center;">
+        <div style="font-size:2rem;margin-bottom:.7rem">🔒</div>
+        <h3>Secure Payments</h3>
+        <p class="text-muted mt-1">Your payment info is always protected.</p>
+      </div>
+      <div class="card" style="padding:1.5rem;text-align:center;">
+        <div style="font-size:2rem;margin-bottom:.7rem">↩️</div>
+        <h3>Easy Returns</h3>
+        <p class="text-muted mt-1">30-day hassle-free return policy.</p>
+      </div>
+      <div class="card" style="padding:1.5rem;text-align:center;">
+        <div style="font-size:2rem;margin-bottom:.7rem">💬</div>
+        <h3>24/7 Support</h3>
+        <p class="text-muted mt-1">We're here whenever you need us.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── Footer ────────────────────────────────────────────────────────────── -->
+<footer>
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-col">
+        <h4>DropShop</h4>
+        <p style="font-size:.85rem;line-height:1.7">Your go-to destination for quality products at unbeatable prices.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Shop</h4>
+        <a href="pages/products.html">All Products</a>
+        <a href="pages/cart.html">Cart</a>
+        <a href="pages/checkout.html">Checkout</a>
+      </div>
+      <div class="footer-col">
+        <h4>Account</h4>
+        <a href="pages/login.html">Login / Register</a>
+        <a href="pages/admin.html">Admin</a>
+      </div>
+      <div class="footer-col">
+        <h4>Help</h4>
+        <a href="#">FAQ</a>
+        <a href="#">Shipping Policy</a>
+        <a href="#">Contact Us</a>
+      </div>
+    </div>
+    <div class="footer-bottom">© 2025 DropShop. All rights reserved.</div>
+  </div>
+</footer>
+
+<div id="toast-container"></div>
+
+<script src="js/api.js"></script>
+<script src="js/utils.js"></script>
+<script>
+  const CATEGORIES = ['Electronics', 'Fashion', 'Home & Office', 'Sports'];
+
+  // ── Seed demo data ──────────────────────────────────────────────────────
+  async function seedDemo() {
+    const btn = document.getElementById('seed-btn');
+    btn.textContent = 'Loading…'; btn.disabled = true;
+    try {
+      await ProductsAPI.seedDemo();
+      showToast('10 sample products loaded! 🎉');
+      loadFeatured();
+      renderCategories();
+    } catch (e) {
+      showToast(e.message, 'error');
+    } finally {
+      btn.textContent = 'Load Sample Data'; btn.disabled = false;
+    }
+  }
+
+  // ── Load featured products ───────────────────────────────────────────────
+  async function loadFeatured() {
+    const grid = document.getElementById('featured-grid');
+    try {
+      const products = await ProductsAPI.getAll({ featured: true });
+      if (!products.length) {
+        grid.innerHTML = `<div class="empty-state" style="grid-column:1/-1"><div class="icon">📦</div><h3>No products yet</h3><p>Click "Load Sample Data" above to get started.</p></div>`;
+        return;
+      }
+      grid.innerHTML = products.slice(0, 8).map(p => productCard(p)).join('');
+    } catch {
+      grid.innerHTML = `<p class="text-muted">Could not load products. Is the backend running?</p>`;
+    }
+  }
+
+  // ── Render categories ────────────────────────────────────────────────────
+  function renderCategories() {
+    const icons = { Electronics: '💻', Fashion: '👗', 'Home & Office': '🏠', Sports: '🏃' };
+    document.getElementById('cat-list').innerHTML = CATEGORIES.map(c =>
+      `<a href="pages/products.html?category=${encodeURIComponent(c)}" style="background:rgba(255,255,255,.08);color:#fff;border-radius:12px;padding:1rem 1.5rem;font-weight:600;font-size:.95rem;transition:.2s;display:flex;flex-direction:column;align-items:center;gap:.4rem;min-width:130px;">
+        <span style="font-size:2rem">${icons[c]}</span>${c}
+      </a>`
+    ).join('');
+  }
+
+  // ── Product card HTML ────────────────────────────────────────────────────
+  function productCard(p) {
+    return `
+      <div class="card product-card" onclick="goTo('pages/product-detail.html?id=${p._id}')">
+        <div class="img-wrap">
+          <img src="${p.image}" alt="${p.name}" loading="lazy" onerror="this.src='https://placehold.co/400x300?text=Product'">
+          ${p.featured ? '<span class="badge">Featured</span>' : ''}
+        </div>
+        <div class="card-body">
+          <div class="category">${p.category}</div>
+          <h3>${p.name}</h3>
+          <div style="display:flex;align-items:center;gap:.4rem;margin-top:.3rem">
+            ${renderStars(p.rating)}
+            <span class="reviews">(${p.reviews})</span>
+          </div>
+          <div class="price-row">
+            <span class="price">${formatPrice(p.price)}</span>
+            <button class="add-btn" onclick="event.stopPropagation();addToCart('${p._id}')">+ Cart</button>
+          </div>
+        </div>
+      </div>`;
+  }
+
+  // ── Add to cart ──────────────────────────────────────────────────────────
+  async function addToCart(productId) {
+    try {
+      await CartAPI.add(productId);
+      showToast('Added to cart! 🛒');
+      updateCartBadge();
+    } catch (e) {
+      showToast(e.message, 'error');
+    }
+  }
+
+  loadFeatured();
+  renderCategories();
+</script>
+</body>
+</html>

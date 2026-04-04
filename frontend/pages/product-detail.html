@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Product — DropShop</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../css/style.css" />
+</head>
+<body>
+
+<nav id="navbar">
+  <div class="nav-inner">
+    <a href="../index.html" class="nav-logo">Drop<span>Shop</span></a>
+    <ul class="nav-links">
+      <li><a href="../index.html">Home</a></li>
+      <li><a href="products.html">Products</a></li>
+      <li><a href="cart.html">Cart</a></li>
+    </ul>
+    <div class="nav-right">
+      <button class="nav-cart-btn" onclick="goTo('cart.html')">
+        🛒 <span class="cart-badge" id="cart-badge" style="display:none">0</span>
+      </button>
+      <button class="nav-user-btn" id="nav-user-btn">Login</button>
+    </div>
+  </div>
+</nav>
+
+<div class="detail-page">
+  <div class="container">
+    <div id="detail-content">
+      <div class="spinner-wrap"><div class="spinner"></div></div>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div class="container">
+    <div class="footer-bottom">© 2025 DropShop. All rights reserved.</div>
+  </div>
+</footer>
+
+<div id="toast-container"></div>
+
+<script src="../js/api.js"></script>
+<script src="../js/utils.js"></script>
+<script>
+  const productId = new URLSearchParams(location.search).get('id');
+  let qty = 1;
+
+  async function loadProduct() {
+    if (!productId) { location.href = 'products.html'; return; }
+    try {
+      const p = await ProductsAPI.getOne(productId);
+      document.title = `${p.name} — DropShop`;
+      document.getElementById('detail-content').innerHTML = `
+        <div class="breadcrumb" style="margin-bottom:1.5rem">
+          <a href="../index.html">Home</a> › <a href="products.html">Products</a> › ${p.name}
+        </div>
+        <div class="detail-layout">
+          <div class="detail-img">
+            <img src="${p.image}" alt="${p.name}" onerror="this.src='https://placehold.co/600x450?text=Product'">
+          </div>
+          <div class="detail-info">
+            <div class="detail-category">${p.category}</div>
+            <h1 style="font-size:1.9rem;margin:.4rem 0 .6rem">${p.name}</h1>
+            <div class="detail-rating">
+              ${renderStars(p.rating)}
+              <span style="color:var(--text-muted);font-size:.9rem">${p.rating} (${p.reviews} reviews)</span>
+            </div>
+            <div class="detail-price">${formatPrice(p.price)}</div>
+            <p class="detail-desc">${p.description}</p>
+            <div class="detail-meta">
+              <span><strong>Stock:</strong> ${p.stock > 0 ? `✅ ${p.stock} in stock` : '❌ Out of stock'}</span>
+              <span><strong>Category:</strong> ${p.category}</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:1rem;margin-bottom:1.2rem">
+              <div class="qty-control">
+                <button class="qty-btn" onclick="changeQty(-1)">−</button>
+                <span class="qty-num" id="qty-display">1</span>
+                <button class="qty-btn" onclick="changeQty(1)">+</button>
+              </div>
+              <span style="font-size:.9rem;color:var(--text-muted)">Quantity</span>
+            </div>
+            <div style="display:flex;gap:.9rem;flex-wrap:wrap">
+              <button class="btn btn-primary" onclick="addToCart()" ${p.stock === 0 ? 'disabled' : ''}>
+                🛒 Add to Cart
+              </button>
+              <a href="cart.html" class="btn btn-outline">View Cart</a>
+            </div>
+          </div>
+        </div>`;
+    } catch {
+      document.getElementById('detail-content').innerHTML =
+        `<div class="empty-state"><div class="icon">❌</div><h3>Product not found</h3><a href="products.html" class="btn btn-primary mt-2">Back to Products</a></div>`;
+    }
+  }
+
+  function changeQty(delta) {
+    qty = Math.max(1, qty + delta);
+    document.getElementById('qty-display').textContent = qty;
+  }
+
+  async function addToCart() {
+    try {
+      await CartAPI.add(productId, qty);
+      showToast(`Added ${qty} item${qty > 1 ? 's' : ''} to cart! 🛒`);
+      updateCartBadge();
+    } catch (e) {
+      showToast(e.message, 'error');
+    }
+  }
+
+  loadProduct();
+</script>
+</body>
+</html>

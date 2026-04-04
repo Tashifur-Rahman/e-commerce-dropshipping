@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin — DropShop</title>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../css/style.css" />
+</head>
+<body>
+<nav id="navbar">
+  <div class="nav-inner">
+    <a href="../index.html" class="nav-logo">Drop<span>Shop</span></a>
+    <ul class="nav-links"><li><a href="../index.html">Home</a></li><li><a href="products.html">Store</a></li></ul>
+    <div class="nav-right"><button class="nav-user-btn" id="nav-user-btn">Login</button></div>
+  </div>
+</nav>
+
+<div class="page-header">
+  <div class="container"><h1>⚙ Admin Panel</h1><p>Manage your store</p></div>
+</div>
+
+<div class="container">
+  <div class="admin-layout">
+    <div class="admin-sidebar">
+      <h3>Navigation</h3>
+      <div class="admin-nav-link active" onclick="showPanel('products')">📦 Products</div>
+      <div class="admin-nav-link" onclick="showPanel('add')">➕ Add Product</div>
+      <div class="admin-nav-link" onclick="showPanel('orders')">📋 Orders</div>
+    </div>
+
+    <div>
+      <!-- Products Panel -->
+      <div id="panel-products" class="admin-panel active">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.2rem">
+          <h2>All Products</h2>
+          <button class="btn btn-outline btn-sm" onclick="loadAdminProducts()">🔄 Refresh</button>
+        </div>
+        <div class="card"><table class="admin-table">
+          <thead><tr><th>Image</th><th>Name</th><th>Category</th><th>Price</th><th>Stock</th><th>Actions</th></tr></thead>
+          <tbody id="products-tbody"><tr><td colspan="6" style="text-align:center;padding:2rem"><div class="spinner" style="margin:auto"></div></td></tr></tbody>
+        </table></div>
+      </div>
+
+      <!-- Add Product Panel -->
+      <div id="panel-add" class="admin-panel">
+        <h2 style="margin-bottom:1.5rem">Add New Product</h2>
+        <div class="card" style="padding:2rem;max-width:600px">
+          <div class="form-row">
+            <div class="form-group"><label>Product Name *</label><input type="text" id="p-name" placeholder="Wireless Headphones" /></div>
+            <div class="form-group"><label>Category *</label>
+              <select id="p-cat"><option>Electronics</option><option>Fashion</option><option>Home & Office</option><option>Sports</option></select>
+            </div>
+          </div>
+          <div class="form-group"><label>Description *</label><textarea id="p-desc" placeholder="Describe the product…"></textarea></div>
+          <div class="form-row">
+            <div class="form-group"><label>Price ($) *</label><input type="number" id="p-price" placeholder="29.99" min="0" step="0.01" /></div>
+            <div class="form-group"><label>Stock</label><input type="number" id="p-stock" placeholder="100" min="0" /></div>
+          </div>
+          <div class="form-group"><label>Image URL</label><input type="text" id="p-image" placeholder="https://images.unsplash.com/…" /></div>
+          <div class="form-row">
+            <div class="form-group"><label>Rating (0–5)</label><input type="number" id="p-rating" placeholder="4.5" min="0" max="5" step="0.1" /></div>
+            <div class="form-group" style="align-self:flex-end;padding-bottom:.5rem">
+              <label style="display:flex;align-items:center;gap:.6rem;cursor:pointer">
+                <input type="checkbox" id="p-featured" /> Mark as Featured
+              </label>
+            </div>
+          </div>
+          <button class="btn btn-primary btn-block" onclick="addProduct()">➕ Add Product</button>
+        </div>
+      </div>
+
+      <!-- Orders Panel -->
+      <div id="panel-orders" class="admin-panel">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.2rem">
+          <h2>All Orders</h2>
+          <button class="btn btn-outline btn-sm" onclick="loadOrders()">🔄 Refresh</button>
+        </div>
+        <div class="card"><table class="admin-table">
+          <thead><tr><th>Order ID</th><th>Customer</th><th>Total</th><th>Status</th><th>Date</th></tr></thead>
+          <tbody id="orders-tbody"><tr><td colspan="5" style="text-align:center;padding:2rem">Select "Orders" to load</td></tr></tbody>
+        </table></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer style="margin-top:3rem"><div class="container"><div class="footer-bottom">© 2025 DropShop Admin</div></div></footer>
+<div id="toast-container"></div>
+
+<script src="../js/api.js"></script>
+<script src="../js/utils.js"></script>
+<script>
+// Guard: admin only
+window.addEventListener('DOMContentLoaded', () => {
+  const user = getUser();
+  if (!user || !user.isAdmin) { showToast('Admin access required','error'); setTimeout(()=>location.href='login.html',1200); }
+});
+
+function showPanel(name) {
+  document.querySelectorAll('.admin-panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.admin-nav-link').forEach(l=>l.classList.remove('active'));
+  document.getElementById(`panel-${name}`).classList.add('active');
+  event.currentTarget.classList.add('active');
+  if (name==='products') loadAdminProducts();
+  if (name==='orders')   loadOrders();
+}
+
+async function loadAdminProducts() {
+  const tbody = document.getElementById('products-tbody');
+  try {
+    const products = await ProductsAPI.getAll();
+    if (!products.length) { tbody.innerHTML='<tr><td colspan="6" style="text-align:center;padding:2rem">No products yet. Add some!</td></tr>'; return; }
+    tbody.innerHTML = products.map(p=>`
+      <tr>
+        <td><img src="${p.image}" alt="${p.name}" onerror="this.src='https://placehold.co/48x48'"></td>
+        <td><strong>${p.name}</strong></td>
+        <td>${p.category}</td>
+        <td>${formatPrice(p.price)}</td>
+        <td>${p.stock}</td>
+        <td><button class="btn btn-danger btn-sm" onclick="deleteProduct('${p._id}')">Delete</button></td>
+      </tr>`).join('');
+  } catch(e) { tbody.innerHTML=`<tr><td colspan="6">Error: ${e.message}</td></tr>`; }
+}
+
+async function deleteProduct(id) {
+  if (!confirm('Delete this product?')) return;
+  try { await ProductsAPI.delete(id); showToast('Product deleted'); loadAdminProducts(); }
+  catch(e) { showToast(e.message,'error'); }
+}
+
+async function addProduct() {
+  const name=document.getElementById('p-name').value.trim();
+  const description=document.getElementById('p-desc').value.trim();
+  const price=parseFloat(document.getElementById('p-price').value);
+  const category=document.getElementById('p-cat').value;
+  const stock=parseInt(document.getElementById('p-stock').value)||100;
+  const image=document.getElementById('p-image').value.trim()||undefined;
+  const rating=parseFloat(document.getElementById('p-rating').value)||4.0;
+  const featured=document.getElementById('p-featured').checked;
+  if (!name||!description||!price||!category){ showToast('Fill required fields','error'); return; }
+  try {
+    await ProductsAPI.create({name,description,price,category,stock,image,rating,featured});
+    showToast('Product added! ✅');
+    ['p-name','p-desc','p-price','p-stock','p-image','p-rating'].forEach(id=>document.getElementById(id).value='');
+    document.getElementById('p-featured').checked=false;
+  } catch(e) { showToast(e.message,'error'); }
+}
+
+async function loadOrders() {
+  const tbody = document.getElementById('orders-tbody');
+  try {
+    const orders = await OrdersAPI.getAll();
+    if (!orders.length) { tbody.innerHTML='<tr><td colspan="5" style="text-align:center;padding:2rem">No orders yet</td></tr>'; return; }
+    tbody.innerHTML = orders.map(o=>`
+      <tr>
+        <td style="font-size:.8rem;font-family:monospace">${o._id.slice(-8)}</td>
+        <td>${o.customer?.name||'Guest'}<br><span style="font-size:.8rem;color:var(--text-muted)">${o.customer?.email||''}</span></td>
+        <td>${formatPrice(o.total)}</td>
+        <td><span class="status-badge status-${o.status}">${o.status}</span></td>
+        <td style="font-size:.82rem">${new Date(o.createdAt).toLocaleDateString()}</td>
+      </tr>`).join('');
+  } catch(e) { tbody.innerHTML=`<tr><td colspan="5">Error: ${e.message} — Make sure you're logged in as admin.</td></tr>`; }
+}
+
+loadAdminProducts();
+</script>
+</body>
+</html>

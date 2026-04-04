@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Login — DropShop</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../css/style.css" />
+  <style>
+    .auth-page { background: var(--primary); }
+
+    .tab-bar {
+      display: flex; border-radius: var(--radius-sm);
+      background: var(--surface-2); padding: .3rem;
+      margin-bottom: 1.8rem; gap: .3rem;
+    }
+    .tab-btn {
+      flex: 1; padding: .55rem; border-radius: 6px;
+      font-size: .9rem; font-weight: 600;
+      background: transparent; color: var(--text-muted);
+      transition: all var(--transition); border: none; cursor: pointer;
+    }
+    .tab-btn.active {
+      background: var(--primary); color: #fff;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .input-group { position: relative; }
+    .input-group .input-icon {
+      position: absolute; left: .9rem; top: 50%; transform: translateY(-50%);
+      color: var(--text-muted); pointer-events: none;
+    }
+    .input-group input { padding-left: 2.6rem; }
+
+    .hint-box {
+      background: #fff7ed; border: 1.5px solid #fed7aa;
+      border-radius: var(--radius-sm); padding: .8rem 1rem;
+      font-size: .82rem; color: #92400e; margin-top: 1rem;
+      line-height: 1.6;
+    }
+  </style>
+</head>
+<body>
+
+<nav id="navbar">
+  <div class="nav-inner">
+    <a href="../index.html" class="nav-logo">Drop<span>Shop</span></a>
+    <ul class="nav-links">
+      <li><a href="../index.html">Home</a></li>
+      <li><a href="products.html">Products</a></li>
+      <li><a href="cart.html">Cart</a></li>
+    </ul>
+    <div class="nav-right">
+      <button class="nav-cart-btn" onclick="goTo('cart.html')">
+        🛒 <span class="cart-badge" id="cart-badge" style="display:none">0</span>
+      </button>
+    </div>
+  </div>
+</nav>
+
+<div class="auth-page">
+  <div class="auth-card">
+
+    <!-- Logo -->
+    <div style="text-align:center; margin-bottom:1.5rem;">
+      <a href="../index.html" style="font-family:'Syne',sans-serif; font-size:1.8rem; font-weight:800; color:var(--primary);">
+        Drop<span style="color:var(--accent)">Shop</span>
+      </a>
+    </div>
+
+    <!-- Tabs -->
+    <div class="tab-bar">
+      <button class="tab-btn active" id="tab-login" onclick="switchTab('login')">Sign In</button>
+      <button class="tab-btn" id="tab-register" onclick="switchTab('register')">Create Account</button>
+    </div>
+
+    <!-- Login Form -->
+    <div id="login-form">
+      <h2 style="margin-bottom:.3rem;">Welcome back</h2>
+      <p class="text-muted" style="margin-bottom:1.5rem; font-size:.9rem;">Sign in to your DropShop account</p>
+
+      <div class="form-group">
+        <label>Email Address</label>
+        <div class="input-group">
+          <span class="input-icon">✉</span>
+          <input type="email" id="l-email" placeholder="you@example.com" />
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Password</label>
+        <div class="input-group">
+          <span class="input-icon">🔑</span>
+          <input type="password" id="l-pass" placeholder="••••••••"
+            onkeydown="if(event.key==='Enter') doLogin()" />
+        </div>
+      </div>
+
+      <button class="btn btn-primary btn-block" style="padding:.8rem;" onclick="doLogin()" id="login-btn">
+        Sign In →
+      </button>
+
+      <div class="auth-footer" style="margin-top:1rem;">
+        Don't have an account?
+        <a href="#" onclick="switchTab('register'); return false;">Create one free</a>
+      </div>
+    </div>
+
+    <!-- Register Form -->
+    <div id="register-form" class="hidden">
+      <h2 style="margin-bottom:.3rem;">Create account</h2>
+      <p class="text-muted" style="margin-bottom:1.5rem; font-size:.9rem;">Join thousands of DropShop shoppers</p>
+
+      <div class="form-group">
+        <label>Full Name</label>
+        <div class="input-group">
+          <span class="input-icon">👤</span>
+          <input type="text" id="r-name" placeholder="John Doe" />
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Email Address</label>
+        <div class="input-group">
+          <span class="input-icon">✉</span>
+          <input type="email" id="r-email" placeholder="you@example.com" />
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Password</label>
+        <div class="input-group">
+          <span class="input-icon">🔑</span>
+          <input type="password" id="r-pass" placeholder="Min. 6 characters" />
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Admin Secret
+          <span style="font-weight:400; color:var(--text-muted); font-size:.82rem;">(optional)</span>
+        </label>
+        <div class="input-group">
+          <span class="input-icon">⚙</span>
+          <input type="text" id="r-secret" placeholder="Leave blank for customer account" />
+        </div>
+      </div>
+
+      <button class="btn btn-primary btn-block" style="padding:.8rem;" onclick="doRegister()" id="register-btn">
+        Create Account →
+      </button>
+
+      <div class="hint-box">
+        🔐 <strong>Admin secret:</strong> <code>DROPSHOP_ADMIN_2024</code><br>
+        Register with this to unlock the Admin panel.
+      </div>
+
+      <div class="auth-footer" style="margin-top:1rem;">
+        Already have an account?
+        <a href="#" onclick="switchTab('login'); return false;">Sign in</a>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div id="toast-container"></div>
+
+<script src="../js/api.js"></script>
+<script src="../js/utils.js"></script>
+<script>
+  // Already logged in? Go home
+  if (getUser()) location.href = '../index.html';
+
+  function switchTab(tab) {
+    const isLogin = tab === 'login';
+    document.getElementById('login-form').classList.toggle('hidden', !isLogin);
+    document.getElementById('register-form').classList.toggle('hidden', isLogin);
+    document.getElementById('tab-login').classList.toggle('active', isLogin);
+    document.getElementById('tab-register').classList.toggle('active', !isLogin);
+  }
+
+  async function doLogin() {
+    const email    = document.getElementById('l-email').value.trim();
+    const password = document.getElementById('l-pass').value;
+    if (!email || !password) { showToast('Please enter email and password', 'error'); return; }
+
+    const btn = document.getElementById('login-btn');
+    btn.textContent = 'Signing in…'; btn.disabled = true;
+
+    try {
+      const data = await AuthAPI.login(email, password);
+      setAuth(data);
+      showToast(`Welcome back, ${data.user.name}! 👋`);
+      setTimeout(() => {
+        location.href = data.user.isAdmin ? 'admin.html' : '../index.html';
+      }, 700);
+    } catch (e) {
+      showToast(e.message, 'error');
+      btn.textContent = 'Sign In →'; btn.disabled = false;
+    }
+  }
+
+  async function doRegister() {
+    const name        = document.getElementById('r-name').value.trim();
+    const email       = document.getElementById('r-email').value.trim();
+    const password    = document.getElementById('r-pass').value;
+    const adminSecret = document.getElementById('r-secret').value.trim();
+
+    if (!name || !email || !password) { showToast('Please fill in all fields', 'error'); return; }
+    if (password.length < 6) { showToast('Password must be at least 6 characters', 'error'); return; }
+
+    const btn = document.getElementById('register-btn');
+    btn.textContent = 'Creating account…'; btn.disabled = true;
+
+    try {
+      const data = await AuthAPI.register(name, email, password, adminSecret);
+      setAuth(data);
+      showToast(`Welcome, ${data.user.name}! Account created 🎉`);
+      setTimeout(() => {
+        location.href = data.user.isAdmin ? 'admin.html' : '../index.html';
+      }, 700);
+    } catch (e) {
+      showToast(e.message, 'error');
+      btn.textContent = 'Create Account →'; btn.disabled = false;
+    }
+  }
+</script>
+</body>
+</html>
